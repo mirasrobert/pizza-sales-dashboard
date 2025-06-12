@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Models\PizzaType;
+use App\Models\Pizza;
 use Illuminate\Http\Request;
 
-class PizzaTypeController extends Controller
+class PizzaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class PizzaTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PizzaType $pizzaType)
+    public function show(Pizza $pizza)
     {
         //
     }
@@ -42,7 +42,7 @@ class PizzaTypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PizzaType $pizzaType)
+    public function edit(Pizza $pizza)
     {
         //
     }
@@ -50,7 +50,7 @@ class PizzaTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PizzaType $pizzaType)
+    public function update(Request $request, Pizza $pizza)
     {
         //
     }
@@ -58,7 +58,7 @@ class PizzaTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PizzaType $pizzaType)
+    public function destroy(Pizza $pizza)
     {
         //
     }
