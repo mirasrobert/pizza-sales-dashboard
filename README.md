@@ -23,7 +23,10 @@ A full-stack application that allows users to log in, view sales analytics from 
 ### ✅ Authentication
 - Register, Login, Logout (SPA cookie session)
 - Sanctum-protected API access
-- Update and delete user profile
+
+### 👤 User Profile
+- Update user profile
+- Delete account
 
 ### 📈 Analytics Dashboard
 - Total revenue & pizzas sold
