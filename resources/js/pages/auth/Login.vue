@@ -25,9 +25,14 @@ const form = reactive({
     errors: [],
 });
 
+const processing = reactive({
+    value: false,
+});
+
 const submit = async () => {
     try {
         form.errors = []; // clear old errors
+        processing.value = true; // set processing state
 
         await axios.post('/api/auth/login', {
             email: form.email,
@@ -45,6 +50,8 @@ const submit = async () => {
         } else {
             console.error(error);
         }
+    } finally {
+        processing.value = true;
     }
 };
 </script>
@@ -94,8 +101,8 @@ const submit = async () => {
                     </Label>
                 </div>
 
-                <Button type="submit" class="mt-4 w-full" :tabindex="4" :disabled="form.processing">
-                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                <Button type="submit" class="mt-4 w-full" :tabindex="4" :disabled="processing.value">
+                    <LoaderCircle v-if="processing.value" class="h-4 w-4 animate-spin" />
                     Log in
                 </Button>
             </div>

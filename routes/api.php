@@ -8,12 +8,13 @@ use App\Http\Controllers\Api\V1\PizzaController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Api\V1\AnalyticsController;
 use App\Http\Controllers\Api\V1\PizzaTypeController;
+use App\Http\Controllers\Settings\ProfileController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::prefix('v1')->group(function () {
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('pizza-types', [PizzaTypeController::class, 'index']);
     Route::get('pizza-types/{id}', [PizzaTypeController::class, 'show']);
 
@@ -27,6 +28,12 @@ Route::prefix('v1')->group(function () {
         Route::get('sales-by-month', [AnalyticsController::class, 'salesByMonth']);
         Route::get('recent-sales', [AnalyticsController::class, 'recentSales']);
     });
+
+    Route::prefix('settings')->group(function () {
+        Route::put('/profile', [ProfileController::class, 'update']);
+        Route::delete('/profile/delete', [ProfileController::class, 'destroy']);
+    });
+
 });
 
 Route::prefix('auth')->group(function () {
