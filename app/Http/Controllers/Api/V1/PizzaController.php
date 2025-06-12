@@ -4,62 +4,54 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Pizza;
 use Illuminate\Http\Request;
+use App\Services\V1\PizzaService;
+use App\Http\Controllers\Controller;
+use App\Utilities\HttpCode;
 
 class PizzaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected PizzaService $pizzaService;
+
+    public function __construct(PizzaService $pizzaService)
+    {
+        $this->pizzaService = $pizzaService;
+    }
+
     public function index()
     {
-        //
+        return response()->json($this->pizzaService->getAllPizzas(), HttpCode::OK);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id)
     {
-        //
+        return response()->json($this->pizzaService->getPizzaById($id), HttpCode::OK);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'pizza_type_id' => 'required|string|exists:pizza_types,id',
+            'size' => 'required|string|in:S,M,L,XL,XXL',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        return response()->json($this->pizzaService->createPizza($data), HttpCode::CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Pizza $pizza)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->validate([
+            'pizza_type_id' => 'sometimes|string|exists:pizza_types,id',
+            'size' => 'sometimes|string|in:S,M,L,XL,XXL',
+            'price' => 'sometimes|numeric|min:0',
+        ]);
+
+        return response()->json($this->pizzaService->updatePizza($id, $data));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Pizza $pizza)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Pizza $pizza)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Pizza $pizza)
-    {
-        //
+        $this->pizzaService->deletePizza($id);
+        return response()->noContent();
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\PizzaController;
 use App\Http\Controllers\Api\V1\PizzaTypeController;
 
 Route::get('/user', function (Request $request) {
@@ -11,4 +12,6 @@ Route::get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
     Route::get('pizza-types', [PizzaTypeController::class, 'index']);
     Route::get('pizza-types/{id}', [PizzaTypeController::class, 'show']);
+
+    Route::apiResource('pizzas', PizzaController::class);
 });

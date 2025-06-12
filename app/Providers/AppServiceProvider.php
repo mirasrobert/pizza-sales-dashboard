@@ -15,6 +15,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\PizzaTypeRepositoryInterface::class,
             \App\Repositories\PizzaTypeRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\PizzaRepositoryInterface::class,
+            \App\Repositories\PizzaRepository::class
+        );
     }
 
     /**
