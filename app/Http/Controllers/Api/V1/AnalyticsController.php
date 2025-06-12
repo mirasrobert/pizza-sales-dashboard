@@ -37,6 +37,12 @@ class AnalyticsController extends Controller
         );
     }
 
+    public function salesByMonth(Request $request)
+    {
+        $year = $request->input('year', '2015');
+        return response()->json($this->analytics->getSalesByMonth($year));
+    }
+
     public function recentSales()
     {
         return response()->json($this->analytics->getRecentSales());

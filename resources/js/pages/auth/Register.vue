@@ -20,11 +20,16 @@ const form = reactive({
     errors: {} as Record<string, string[]>,
 });
 
+const processing = reactive({
+    value: false,
+});
+
 const submit = async () => {
     try {
+        processing.value = true; // set processing state
         form.errors = {}; // clear previous errors
 
-        await axios.post('/register', {
+        await axios.post('/api/auth/register', {
             name: form.name,
             email: form.email,
             password: form.password,
@@ -35,8 +40,8 @@ const submit = async () => {
         form.password = '';
         form.password_confirmation = '';
 
-        // optionally redirect or show success message
-        router.push('/dashboard');
+        // redirect to login, after registration.
+        router.push('/login');
     } catch (error) {
         if (axios.isAxiosError(error) && error.response?.status === 422) {
             // validation errors from Laravel
@@ -44,6 +49,8 @@ const submit = async () => {
         } else {
             console.error(error);
         }
+    } finally {
+        processing.value = false; // reset processing state
     }
 };
 </script>
@@ -54,28 +61,20 @@ const submit = async () => {
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="name">Name</Label>
-                    <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" v-model="form.name" placeholder="Full name" />
-                    <InputError :message="form.errors.name" />
+                    <Input id="name" type="text" autofocus :tabindex="1" autocomplete="name" v-model="form.name" placeholder="Full name" />
+                    <InputError v-if="form.errors.name" :message="form.errors.name[0]" />
                 </div>
 
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
-                    <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email" placeholder="email@example.com" />
-                    <InputError :message="form.errors.email" />
+                    <Input id="email" type="email" :tabindex="2" autocomplete="email" v-model="form.email" placeholder="email@example.com" />
+                    <InputError v-if="form.errors.email" :message="form.errors.email[0]" />
                 </div>
 
                 <div class="grid gap-2">
                     <Label for="password">Password</Label>
-                    <Input
-                        id="password"
-                        type="password"
-                        required
-                        :tabindex="3"
-                        autocomplete="new-password"
-                        v-model="form.password"
-                        placeholder="Password"
-                    />
-                    <InputError :message="form.errors.password" />
+                    <Input id="password" type="password" :tabindex="3" autocomplete="new-password" v-model="form.password" placeholder="Password" />
+                    <InputError v-if="form.errors.password" :message="form.errors.password[0]" />
                 </div>
 
                 <div class="grid gap-2">
@@ -83,17 +82,16 @@ const submit = async () => {
                     <Input
                         id="password_confirmation"
                         type="password"
-                        required
                         :tabindex="4"
                         autocomplete="new-password"
                         v-model="form.password_confirmation"
                         placeholder="Confirm password"
                     />
-                    <InputError :message="form.errors.password_confirmation" />
+                    <InputError v-if="form.errors.password_confirmation" :message="form.errors.password_confirmation[0]" />
                 </div>
 
-                <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">
-                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="processing.value">
+                    <LoaderCircle v-if="processing.value" class="h-4 w-4 animate-spin" />
                     Create account
                 </Button>
             </div>

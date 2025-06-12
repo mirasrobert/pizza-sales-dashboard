@@ -35,4 +35,25 @@ export interface User {
     updated_at: string;
 }
 
+export interface SaleSummary {
+    total_revenue: string;
+    total_orders: number;
+    total_pizzas_sold: string;
+    average_order_per_month: string;
+}
+
+interface Pizza {
+    id: string;
+    pizza_type_id: string;
+    size: string;
+    price: string;
+}
+
+export interface TopPizza {
+    pizza_id: string;
+    total_quantity: string;
+    pizza: Pizza
+  }
+
+
 export type BreadcrumbItemType = BreadcrumbItem;

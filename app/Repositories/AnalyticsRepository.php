@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\AnalyticsRepositoryInterface;
@@ -15,14 +16,19 @@ class AnalyticsRepository implements AnalyticsRepositoryInterface
             ->value('total');
 
         $totalSold = OrderDetail::sum('quantity');
+        $totalOrders = OrderDetail::distinct('order_id')->count('order_id');
+        $averageOrderPerMonth = Order::selectRaw('COUNT(*) / COUNT(DISTINCT MONTH(date)) as avg_orders')
+        ->value('avg_orders');
 
         return [
             'total_revenue' => $totalRevenue,
             'total_pizzas_sold' => $totalSold,
+            'total_orders' => $totalOrders,
+            'average_order_per_month' => $averageOrderPerMonth
         ];
     }
 
-    public function getTopPizzas(int $limit = 5): array
+    public function getTopPizzas(int $limit = 10): array
     {
         return OrderDetail::select('pizza_id', DB::raw('SUM(quantity) as total_quantity'))
             ->groupBy('pizza_id')
@@ -42,6 +48,26 @@ class AnalyticsRepository implements AnalyticsRepositoryInterface
             ->orderBy('orders.date')
             ->select(
                 'orders.date',
+                DB::raw('SUM(order_details.quantity * pizzas.price) as revenue'),
+                DB::raw('SUM(order_details.quantity) as total_pizzas')
+            )
+            ->get()
+            ->toArray();
+    }
+
+    public function getSalesByMonth(string $year = '2015'): array
+    {
+        return OrderDetail::join('orders', 'order_details.order_id', '=', 'orders.id')
+            ->join('pizzas', 'order_details.pizza_id', '=', 'pizzas.id')
+            ->whereYear('orders.date', $year)
+            ->groupBy(
+                DB::raw('YEAR(orders.date)'),
+                DB::raw('MONTH(orders.date)')
+            )
+            ->orderBy(DB::raw('MONTH(orders.date)'))
+            ->select(
+                DB::raw('MONTH(orders.date) as month'),
+                DB::raw('YEAR(orders.date) as year'),
                 DB::raw('SUM(order_details.quantity * pizzas.price) as revenue'),
                 DB::raw('SUM(order_details.quantity) as total_pizzas')
             )

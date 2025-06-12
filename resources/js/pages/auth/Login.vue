@@ -29,7 +29,7 @@ const submit = async () => {
     try {
         form.errors = []; // clear old errors
 
-        await axios.post('/login', {
+        await axios.post('/api/auth/login', {
             email: form.email,
             password: form.password,
             remember: form.remember,
@@ -37,7 +37,7 @@ const submit = async () => {
 
         form.password = ''; // reset password field
 
-        // redirect or do something on success
+        // redirect to dashboard after successful login
         router.push('/dashboard');
     } catch (error) {
         if (axios.isAxiosError(error) && error.response?.status === 422) {
@@ -62,14 +62,13 @@ const submit = async () => {
                     <Input
                         id="email"
                         type="email"
-                        required
                         autofocus
                         :tabindex="1"
                         autocomplete="email"
                         v-model="form.email"
                         placeholder="email@example.com"
                     />
-                    <InputError :message="form.errors.email" />
+                    <InputError v-if="form.errors.email" :message="form.errors.email[0]" />
                 </div>
 
                 <div class="grid gap-2">
@@ -80,13 +79,12 @@ const submit = async () => {
                     <Input
                         id="password"
                         type="password"
-                        required
                         :tabindex="2"
                         autocomplete="current-password"
                         v-model="form.password"
                         placeholder="Password"
                     />
-                    <InputError :message="form.errors.password" />
+                    <InputError v-if="form.errors.password" :message="form.errors.password[0]" />
                 </div>
 
                 <div class="flex items-center justify-between">

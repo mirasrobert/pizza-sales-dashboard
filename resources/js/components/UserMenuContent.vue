@@ -2,14 +2,19 @@
 import UserInfo from '@/components/UserInfo.vue';
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import type { User } from '@/types';
+import axios from 'axios';
 import { LogOut, Settings } from 'lucide-vue-next';
 
 interface Props {
     user: User;
 }
 
-const handleLogout = () => {
-    alert('Logging out...');
+const handleLogout = async () => {
+    try {
+        await axios.post('/api/auth/logout');
+    } catch (error) {
+        alert('Logout failed. Please try again.');
+    }
 };
 
 defineProps<Props>();
@@ -24,9 +29,9 @@ defineProps<Props>();
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">
-            <RouterLink class="block w-full" to="route('profile.edit')" prefetch as="button">
+            <RouterLink class="block w-full" to="/profile" prefetch as="button">
                 <Settings class="mr-2 h-4 w-4" />
-                Settings
+                Profile
             </RouterLink>
         </DropdownMenuItem>
     </DropdownMenuGroup>
