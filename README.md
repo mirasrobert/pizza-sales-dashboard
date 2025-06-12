@@ -28,8 +28,9 @@ A full-stack application that allows users to log in, view sales analytics from 
 ### 📈 Analytics Dashboard
 - Total revenue & pizzas sold
 - Top-selling pizzas
-- Sales over time (daily/monthly)
+- Sales over time (monthly) in chart
 - Recent sales table
+- Orders per month
 
 ### 📦 Data Management
 - CRUD for:
