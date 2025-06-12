@@ -51,7 +51,7 @@ const submit = async () => {
             console.error(error);
         }
     } finally {
-        processing.value = true;
+        processing.value = false;
     }
 };
 </script>

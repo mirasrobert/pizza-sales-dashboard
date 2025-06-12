@@ -18,8 +18,7 @@ onMounted(async () => {
         const { data } = await axios.get('/api/user');
         Object.assign(user, data);
     } catch (error) {
-        console.error('Failed to load user data:', error);
-        alert('Failed to load user data. Please try again later.');
+        console.error('Unauthenticated:', error);
     }
 });
 

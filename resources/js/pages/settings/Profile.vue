@@ -68,8 +68,7 @@ onMounted(async () => {
         form.name = data.name;
         form.email = data.email;
     } catch (error) {
-        console.error('Failed to load user data:', error);
-        alert('Failed to load user data. Please try again later.');
+        console.error('Unauthenticated:', error);
     }
 });
 </script>
