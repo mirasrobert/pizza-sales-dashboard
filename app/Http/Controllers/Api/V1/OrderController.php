@@ -23,10 +23,10 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = $this->orderService->findById($id);
-
+        //$order = $this->orderService->findById($id);
+        $order = \App\Models\Order::find($id);
         if ($order) {
-            $order->load('orderDetails.pizza');
+            $order->load('orderDetails');
             return response()->json($order);
         }
 

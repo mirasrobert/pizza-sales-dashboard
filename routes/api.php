@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\PizzaController;
+use App\Http\Controllers\Api\V1\AnalyticsController;
 use App\Http\Controllers\Api\V1\PizzaTypeController;
 
 Route::get('/user', function (Request $request) {
@@ -16,4 +17,11 @@ Route::prefix('v1')->group(function () {
 
     Route::apiResource('pizzas', PizzaController::class);
     Route::apiResource('orders', OrderController::class);
+
+    Route::prefix('analytics')->group(function () {
+        Route::get('sales-summary', [AnalyticsController::class, 'salesSummary']);
+        Route::get('top-pizzas', [AnalyticsController::class, 'topPizzas']);
+        Route::get('sales-by-date', [AnalyticsController::class, 'salesByDate']);
+        Route::get('recent-sales', [AnalyticsController::class, 'recentSales']);
+    });
 });
