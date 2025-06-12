@@ -5,6 +5,12 @@ namespace App\Repositories;
 use App\Repositories\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class BaseRepository
+ *
+ * This class provides a base implementation for repository pattern.
+ * Its mainly used for CRUD operations.
+ */
 class BaseRepository implements BaseRepositoryInterface
 {
     /**
@@ -22,6 +28,17 @@ class BaseRepository implements BaseRepositoryInterface
     public function getAll()
     {
         return $this->model->all();
+    }
+
+    /**
+     * Get all records with pagination.
+     *
+     * @param int $perPage
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllPaginated(int $perPage = 10)
+    {
+        return $this->model->paginate($perPage);
     }
 
     /**

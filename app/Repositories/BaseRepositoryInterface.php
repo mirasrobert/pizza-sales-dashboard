@@ -15,6 +15,14 @@ interface BaseRepositoryInterface
     public function getAll();
 
     /**
+     * Get all records with pagination.
+     *
+     * @param int $perPage
+     * @return Collection
+     */
+    public function getAllPaginated(int $perPage = 10);
+
+    /**
      * Find a record by its ID.
      *
      * @param string $id

@@ -2,65 +2,56 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\V1\OrderService;
+use App\Utilities\HttpCode;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected OrderService $orderService;
+    public function __construct(OrderService $orderService)
     {
-        //
+        $this->orderService = $orderService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index(Request $request)
     {
-        //
+        $perPage = $request->query('per_page', 10);
+        return response()->json($this->orderService->paginatedList($perPage), HttpCode::OK);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function show($id)
+    {
+        $order = $this->orderService->findById($id);
+
+        if ($order) {
+            $order->load('orderDetails.pizza');
+            return response()->json($order);
+        }
+
+        return response()->json(['error' => 'Not found'], HttpCode::NOT_FOUND);
+    }
+
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'date' => 'required|date',
+            'time' => 'required'
+        ]);
+
+        $order = $this->orderService->create($validated);
+        return response()->json($order, HttpCode::CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Order $order)
+    public function destroy($id)
     {
-        //
-    }
+        $order = $this->orderService->findById($id);
+        if (!$order) {
+            return response()->json(['error' => 'Not found'], HttpCode::NOT_FOUND);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Order $order)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
-    {
-        //
+        $this->orderService->delete($id);
+        return response()->json(['deleted' => $id], HttpCode::OK);
     }
 }

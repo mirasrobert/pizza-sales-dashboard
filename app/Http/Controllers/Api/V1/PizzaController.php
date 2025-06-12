@@ -51,7 +51,12 @@ class PizzaController extends Controller
 
     public function destroy($id)
     {
+        $pizza = $this->pizzaService->getPizzaById($id);
+        if (!$pizza) {
+            return response()->json(['error' => 'Not found'], HttpCode::NOT_FOUND);
+        }
+
         $this->pizzaService->deletePizza($id);
-        return response()->noContent();
+        return response()->json(['deleted' => $id], HttpCode::OK);
     }
 }
