@@ -42,20 +42,23 @@ class ProfileController extends Controller
 
         if (Hash::check($request->password, $request->user()->password) === false) {
             throw ValidationException::withMessages([
-                'email' => 'The provided password does not match our records.',
+                'password' => 'The provided password does not match our records.',
             ]);
 
         }
 
         $user = $request->user();
 
-        Auth::logout();
+        Auth::guard('web')->logout();
 
         $user->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return response()->json([
+            'status' => 'Profile deleted successfully.',
+            'success' => true
+        ]);
     }
 }

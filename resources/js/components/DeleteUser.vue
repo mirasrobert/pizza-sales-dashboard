@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 // Components
 import HeadingSmall from '@/components/HeadingSmall.vue';
@@ -19,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
+const router = useRouter();
 const passwordInput = ref<HTMLInputElement | null>(null);
 
 const processing = reactive({
@@ -34,7 +36,13 @@ const deleteUser = async (e: Event) => {
     e.preventDefault();
 
     try {
-        await axios.delete('/api/v1/settings/profile/delete');
+        await axios.delete('/api/v1/settings/profile/delete', {
+            data: {
+                password: form.password,
+            },
+        });
+
+        router.push({ name: 'login' });
     } catch (error) {
         if (axios.isAxiosError(error) && error.response?.status === 422) {
             form.errors = error.response.data.errors;

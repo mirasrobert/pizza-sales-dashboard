@@ -1,15 +1,5 @@
 <script setup lang="ts">
 import { Separator } from '@/components/ui/separator';
-import { type NavItem } from '@/types';
-
-const sidebarNavItems: NavItem[] = [
-    {
-        title: 'Profile',
-        href: '/settings/profile',
-    },
-];
-
-const currentPath = '/';
 </script>
 
 <template>

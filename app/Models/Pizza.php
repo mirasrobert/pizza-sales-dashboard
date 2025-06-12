@@ -13,4 +13,9 @@ class Pizza extends Model
     protected $fillable = [
         'id', 'pizza_type_id', 'size', 'price',
     ];
+
+    public function pizzaType()
+    {
+        return $this->belongsTo(PizzaType::class, 'pizza_type_id');
+    }
 }
